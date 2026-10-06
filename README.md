@@ -55,7 +55,7 @@ Claude Code のプロンプトで次を実行します。
 | `memory_dir` | `~/agent-memory` | メモリリポの場所 |
 | `python` | `python3` | `bin/mem` を動かす Python |
 
-設定は後から `/config` で変更できます。
+既定値のままでよければ何もしなくて構いません。変更は `/plugin configure agent-memory-kit@agent-memory-kit` か `/config` で行えます。
 
 ### 3. メモリリポを作る
 
