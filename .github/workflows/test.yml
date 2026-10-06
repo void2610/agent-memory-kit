@@ -1,0 +1,47 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: e2e (${{ matrix.os }}, python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, python: "3.9" }
+          - { os: ubuntu-latest, python: "3.13" }
+          # macOS 標準の /usr/bin/python3（Xcode CLT, 3.9 系）で動くことを確認する
+          - { os: macos-latest, python: system }
+          - { os: macos-latest, python: "3.13" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        if: matrix.python != 'system'
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Select interpreter
+        run: |
+          if [ "${{ matrix.python }}" = system ]; then
+            echo "PYTHON=/usr/bin/python3" >> "$GITHUB_ENV"
+          else
+            echo "PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
+          fi
+      - name: Run e2e tests
+        run: tests/e2e.sh
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Compile with Python 3.9
+        run: python -m py_compile bin/mem
+      - name: shellcheck
+        run: shellcheck -S warning tests/e2e.sh
