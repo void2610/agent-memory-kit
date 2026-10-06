@@ -24,7 +24,11 @@ echo "git:    $(git --version)"
 M() { "$PY" "$KIT/bin/mem" "$@"; }
 pass=0; fail=0
 ok() { echo "  PASS $1"; pass=$((pass + 1)); }
-ng() { echo "  FAIL $1"; fail=$((fail + 1)); }
+ng() {
+  echo "  FAIL $1"; fail=$((fail + 1))
+  [ -n "${GITHUB_ACTIONS:-}" ] && echo "::error title=e2e::FAIL $1"
+  return 0
+}
 # chk <名前> <コマンド...> — コマンドが成功すれば PASS
 chk() { local name="$1"; shift; if "$@" >/dev/null 2>&1; then ok "$name"; else ng "$name"; fi; }
 has() { printf '%s' "$1" | grep -qF -- "$2"; }          # has <文字列> <パターン>
@@ -49,7 +53,9 @@ EOF
 }
 waitsync() { local i=0; while [ $i -lt 120 ]; do pgrep -f "mem.* sync" >/dev/null 2>&1 || return 0; sleep 0.5; i=$((i + 1)); done; }
 # HOME 配下のファイル一覧（メモリリポ・テスト用の入力・gitconfig を除く）。グローバル領域を汚していないかの確認用
-home_files() { (cd "$HOME" && find . -type f ! -path './agent-memory/*' ! -path './.claude/projects/*' ! -name .gitconfig | sort); }
+# macOS 標準の Python は標準ライブラリのバイトコードを ~/Library/Caches/com.apple.python に置く（インタプリタ自身のキャッシュ）
+home_files() { (cd "$HOME" && find . -type f ! -path './agent-memory/*' ! -path './.claude/projects/*' \
+  ! -path './Library/Caches/com.apple.python/*' ! -name .gitconfig | sort); }
 
 git init -q --bare "$S/remote.git"
 echo '{"permissions":{"allow":["Bash(npm test)"]}}' > "$HOME/.claude/settings.json"
@@ -229,7 +235,9 @@ M doctor | sed 's/^/    /'
 echo "== nothing written outside the memory repo"
 AFTER=$(home_files)
 if [ "$BEFORE" = "$AFTER" ]; then ok "HOME untouched (settings.json, CLAUDE.md, ~/.config, ~/.local, LaunchAgents)"
-else ng "HOME untouched"; diff <(echo "$BEFORE") <(echo "$AFTER") | sed 's/^/    /'; fi
+else
+  ng "HOME untouched: $(diff <(echo "$BEFORE") <(echo "$AFTER") | grep '^[<>]' | tr '\n' ' ')"
+fi
 chk "settings.json unchanged" test "$(cat "$HOME/.claude/settings.json")" = '{"permissions":{"allow":["Bash(npm test)"]}}'
 
 echo
