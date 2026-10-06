@@ -1,0 +1,24 @@
+{
+  "name": "agent-memory-kit",
+  "version": "2.0.0",
+  "description": "Agent Memory Repo 仕様のプロジェクト横断メモリを Claude Code で全自動運用する（注入・自動コミット・同期・Dreaming）",
+  "author": { "name": "void2610", "url": "https://github.com/void2610" },
+  "homepage": "https://github.com/void2610/agent-memory-kit",
+  "repository": "https://github.com/void2610/agent-memory-kit",
+  "license": "MIT",
+  "keywords": ["memory", "agent-memory-repo", "git"],
+  "userConfig": {
+    "memory_dir": {
+      "type": "string",
+      "title": "メモリリポの場所",
+      "description": "Agent Memory Repo の git リポのパス。~ はホームディレクトリ",
+      "default": "~/agent-memory"
+    },
+    "python": {
+      "type": "string",
+      "title": "Python",
+      "description": "bin/mem を動かす Python 3.9 以上のコマンド",
+      "default": "python3"
+    }
+  }
+}

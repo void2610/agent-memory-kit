@@ -1,0 +1,14 @@
+{
+  "name": "agent-memory-kit",
+  "owner": {
+    "name": "void2610"
+  },
+  "description": "agent-memory-kit プラグインのマーケットプレイス",
+  "plugins": [
+    {
+      "name": "agent-memory-kit",
+      "source": "./",
+      "description": "Agent Memory Repo 仕様のプロジェクト横断メモリを Claude Code で全自動運用する"
+    }
+  ]
+}

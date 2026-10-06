@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e:
-    name: e2e (${{ matrix.os }}, python ${{ matrix.python }})
+    name: mem e2e (${{ matrix.os }}, python ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -33,6 +33,21 @@ jobs:
           fi
       - name: Run e2e tests
         run: tests/e2e.sh
+
+  plugin:
+    name: plugin (validate + hooks tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate plugin
+        run: claude plugin validate --strict .
+      - name: Run hooks module tests
+        run: claude plugin test .
 
   lint:
     runs-on: ubuntu-latest

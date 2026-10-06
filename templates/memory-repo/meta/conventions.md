@@ -10,7 +10,7 @@
 ## 置き場所
 - MEMORY.md: 全セッションで必要なことだけ。それ以外は Index からリンクする
 - user/: ユーザー自身（profile）と、エージェントへの好み（preferences）
-- projects/<slug>.md: プロジェクトごとの決定事項・構成・罠。先頭付近に `[repo: owner/name]` を持つ行を置くと、そのリポで起動したセッションに自動で読み込まれる。新規作成は `mem new-project owner/name`
+- projects/<slug>.md: プロジェクトごとの決定事項・構成・罠。先頭付近に `[repo: owner/name]` を持つ行を置くと、そのリポで起動したセッションに自動で読み込まれる。新規作成は memory ツールの new_project（ターミナルからは `mem new-project owner/name`）
 - knowledge/<分野>/...: 複数プロジェクトで使える技術知識・手順・踏んだ罠（例: knowledge/unity/, knowledge/steam/, knowledge/nix/）
 - swarms/<名前>/: 複数エージェントの並行調査用（README.md に目的とルール、findings.md、questions.md、agents/）
 - SQL・シェルスクリプト・設定断片など、そのまま再利用できるものはファイルとして置き、説明のエントリからリンクする
@@ -21,7 +21,7 @@
 - `[[path]]` でリンクする。パスはリポのルートから。.md は省略し、他の拡張子は残す（例: `[[knowledge/steam/upload_build.sh]]`）
 - 同じ情報は1か所に置き、他の場所からはリンクで参照する
 - 新しいファイルを作ったら、必ず親の索引（MEMORY.md の Index、projects/_index、knowledge/_index など）からリンクする
-- 移動・改名は `mem mv <旧> <新>` を使う（リンクも書き換わる）。削除は `mem rm <パス>`
+- 移動・改名は memory ツールの mv を使う（リンクも書き換わる）。削除は memory ツールの rm（ターミナルからは `mem mv` / `mem rm`）
 
 ## 保存する / しない
 - 保存する: ユーザーの好み、決定事項とその理由、ユーザーが何度も説明しなければならないこと、時間をかけて突き止めた原因や罠、検証済みの手順やクエリ

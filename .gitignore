@@ -1,3 +1,5 @@
 __pycache__/
 *.pyc
 .DS_Store
+# Claude Code がプラグイン読み込み時に生成する型定義
+.claude-plugin/types/
