@@ -32,7 +32,7 @@ has() { printf '%s' "$1" | grep -q -- "$2"; }          # has <文字列> <パタ
 hasnt() { ! printf '%s' "$1" | grep -q -- "$2"; }
 empty() { [ -z "$1" ]; }
 infile() { grep -q -- "$2" "$1"; }                       # infile <ファイル> <パターン>
-remote_log() { git --git-dir="$S/remote.git" log --oneline "${1:-main}"; }
+remote_log() { git --git-dir="$S/remote.git" log --oneline main; }
 remote_show() { git --git-dir="$S/remote.git" show "main:$1"; }
 delline() { "$PY" - "$1" "$2" <<'EOF'
 import sys
